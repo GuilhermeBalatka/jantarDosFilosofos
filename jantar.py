@@ -11,16 +11,16 @@ class Filosofo(threading.Thread):
         self.nome = nome
         self.garfo_esquerdo = garfo_esquerdo
         self.garfo_direito = garfo_direito
-        self.max_comida = random.randint(40, 60)
+        self.max_comida = random.randint(20, 25)
         self.inicio = time.time()
         self.comida = self.max_comida
         self.tempo = True
 
     def run(self):
         while self.tempo:
-            print(f'O filósofo {self.nome} começou a pensar')
-            time.sleep(random.randint(10, 20))
-            print(f'O filósofo {self.nome} começou a comer')
+            print(f'\nO filósofo {self.nome} começou a pensar')
+            time.sleep(5)
+
             self.tentar_comer()
 
 
@@ -29,22 +29,27 @@ class Filosofo(threading.Thread):
 
     def tentar_comer(self):
         while self.tempo:
-            liberado1 = self.garfo_esquerdo.acquire(False)
-            liberado2 = self.garfo_direito.acquire(False)
             atual = time.time()
-
             if atual - self.inicio > self.max_comida:
-                print(f'O filósofo {self.nome} ficou muito tempo sem comer')
+                print(f'\nO filósofo {self.nome} ficou muito tempo sem comer')
+            self.garfo_esquerdo.acquire(True)
+            resultado = self.garfo_direito.acquire(False)
+            if resultado:
+                break
+            self.garfo_esquerdo.release()
 
-            if liberado1 and liberado2:
-                self.comida = self.max_comida
-                self.garfo_esquerdo.release()
-                self.garfo_direito.release()
+        else:
+            return
 
-                print(f'O filósofo {self.nome} terminou de comer')
-                self.inicio = atual
-                return
+        print(f"\n {self.nome} começou a comer")
+        time.sleep(random.randint(5, 10))
+        print(f"\n {self.nome} parou de comer")
 
+        self.garfo_esquerdo.release()  # libera o garfo 1
+        self.garfo_direito.release()  # libera o garfo 2
+        self.inicio = atual
+
+          
 
 if __name__ == '__main__':
     nomes_filosofos = [f'filosofo {i}' for i in range(1, 5+1)]
