@@ -33,7 +33,7 @@ class Filosofo(threading.Thread):
             if self.inicio < self.tempo_comida:
                 print(f'\nO filósofo {self.nome} ficou muito tempo sem comer')
                 self.garfo_esquerdo.acquire(False)
-                self.garfo_esquerdo.acquire(False)
+                self.garfo_direito.acquire(False)
 
 
             self.garfo_esquerdo.acquire(True)
