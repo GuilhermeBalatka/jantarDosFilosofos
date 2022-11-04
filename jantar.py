@@ -11,7 +11,7 @@ class Filosofo(threading.Thread):
         self.nome = nome
         self.garfo_esquerdo = garfo_esquerdo
         self.garfo_direito = garfo_direito
-        self.max_comida = random.randint(20, 25)
+        self.tempo_comida = random.randint(20, 25)
         self.inicio = random.randint(30, 35)
         self.tempo = True
 
@@ -20,7 +20,7 @@ class Filosofo(threading.Thread):
             print(f'\nO filósofo {self.nome} começou a pensar')
             time.sleep(5)
 
-            if self.inicio > self.max_comida:
+            if self.inicio > self.tempo_comida:
                 self.tentar_comer()
 
 
@@ -30,7 +30,7 @@ class Filosofo(threading.Thread):
     def tentar_comer(self):
         while self.tempo:
             atual = time.time()
-            if self.inicio < self.max_comida:
+            if self.inicio < self.tempo_comida:
                 print(f'\nO filósofo {self.nome} ficou muito tempo sem comer')
                 self.garfo_esquerdo.acquire(False)
                 self.garfo_esquerdo.acquire(False)
